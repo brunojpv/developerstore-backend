@@ -10,6 +10,7 @@
 
     public class CartItem
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         public int ProductId { get; set; }
         public int Quantity { get; set; }
     }

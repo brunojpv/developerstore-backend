@@ -71,7 +71,7 @@ namespace DeveloperStore.Infrastructure.Persistence
 
             modelBuilder.Entity<CartItem>(e =>
             {
-                e.HasKey(ci => new { ci.ProductId, ci.Quantity }); // chave composta simplificada
+                e.HasKey(ci => ci.Id);
             });
         }
     }
