@@ -4,6 +4,7 @@ using DeveloperStore.Application.UseCases.Sales;
 using DeveloperStore.Domain.Interfaces;
 using DeveloperStore.Infrastructure.Data;
 using DeveloperStore.Infrastructure.Repositories;
+using DeveloperStore.Infrastructure.Seeders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -21,6 +22,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<FakeDataSeeder>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -42,6 +44,12 @@ app.MapSalesEndpoints();
 app.MapProductsEndpoints();
 app.MapUsersEndpoints();
 app.MapCartsEndpoints();
+
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<FakeDataSeeder>();
+    await seeder.SeedAsync();
+}
 
 await app.RunAsync();
 
