@@ -15,11 +15,25 @@ namespace DeveloperStore.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().OwnsOne(p => p.Rating);
+
             modelBuilder.Entity<User>().OwnsOne(u => u.Address, a =>
             {
                 a.OwnsOne(g => g.Geolocation);
             });
+
             modelBuilder.Entity<User>().OwnsOne(u => u.Name);
+
+            modelBuilder.Entity<Cart>().OwnsMany(c => c.Products, b =>
+            {
+                b.WithOwner().HasForeignKey("CartId");
+                b.HasKey("ProductId", "CartId");
+            });
+
+            modelBuilder.Entity<Sale>().OwnsMany(s => s.Items, b =>
+            {
+                b.WithOwner().HasForeignKey("SaleId");
+                b.HasKey("ProductId", "SaleId");
+            });
         }
     }
 }
