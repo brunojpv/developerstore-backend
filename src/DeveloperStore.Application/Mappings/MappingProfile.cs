@@ -8,11 +8,9 @@ namespace DeveloperStore.Application.Mappings
     {
         public MappingProfile()
         {
+            CreateMap<Sale, SaleResponseDto>();
+            CreateMap<SaleItem, SaleItemResponseDto>();
             CreateMap<SaleItem, SaleItemResultDto>();
-
-            CreateMap<Sale, SaleResponseDto>()
-                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
 
             CreateMap<CartItem, CartItemDto>();
 

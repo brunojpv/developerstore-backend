@@ -1,8 +1,12 @@
 using DeveloperStore.Api.Controllers;
+using DeveloperStore.Application.Events;
+using DeveloperStore.Application.Interfaces;
 using DeveloperStore.Application.Mappings;
+using DeveloperStore.Application.Services;
 using DeveloperStore.Application.UseCases.Sales;
 using DeveloperStore.Domain.Interfaces;
 using DeveloperStore.Infrastructure.Data;
+using DeveloperStore.Infrastructure.Events;
 using DeveloperStore.Infrastructure.Repositories;
 using DeveloperStore.Infrastructure.Seeders;
 using MediatR;
@@ -22,6 +26,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ISaleService, SaleService>();
+builder.Services.AddScoped<IEventPublisher, FakeEventPublisher>();
 builder.Services.AddScoped<FakeDataSeeder>();
 
 builder.Services.AddEndpointsApiExplorer();
