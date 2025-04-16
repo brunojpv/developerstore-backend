@@ -1,29 +1,24 @@
 ﻿using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Interfaces;
-using DeveloperStore.Infrastructure.Persistence;
+using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
+        public UserRepository(AppDbContext context) => _context = context;
 
-        public UserRepository(ApplicationDbContext context)
+        public async Task AddAsync(User user)
         {
-            _context = context;
-        }
-
-        public async Task<User> AddAsync(User user)
-        {
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-            return user;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await GetByIdAsync(id);
             if (user != null)
             {
                 _context.Users.Remove(user);
@@ -31,11 +26,9 @@ namespace DeveloperStore.Infrastructure.Repositories
             }
         }
 
-        public async Task<List<User>> GetAllAsync() =>
-            await _context.Users.AsNoTracking().ToListAsync();
+        public async Task<IEnumerable<User>> GetAllAsync() => await _context.Users.ToListAsync();
 
-        public async Task<User?> GetByIdAsync(int id) =>
-            await _context.Users.FindAsync(id);
+        public async Task<User?> GetByIdAsync(int id) => await _context.Users.FindAsync(id);
 
         public async Task UpdateAsync(User user)
         {

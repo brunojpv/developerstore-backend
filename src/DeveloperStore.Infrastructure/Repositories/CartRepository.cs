@@ -1,32 +1,24 @@
 ﻿using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Interfaces;
-using DeveloperStore.Infrastructure.Persistence;
+using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories
 {
     public class CartRepository : ICartRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
+        public CartRepository(AppDbContext context) => _context = context;
 
-        public CartRepository(ApplicationDbContext context)
+        public async Task AddAsync(Cart cart)
         {
-            _context = context;
-        }
-
-        public async Task<Cart> AddAsync(Cart cart)
-        {
-            _context.Carts.Add(cart);
+            await _context.Carts.AddAsync(cart);
             await _context.SaveChangesAsync();
-            return cart;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var cart = await _context.Carts
-                .Include(c => c.Products)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
+            var cart = await GetByIdAsync(id);
             if (cart != null)
             {
                 _context.Carts.Remove(cart);
@@ -34,16 +26,9 @@ namespace DeveloperStore.Infrastructure.Repositories
             }
         }
 
-        public async Task<List<Cart>> GetAllAsync() =>
-            await _context.Carts
-                .Include(c => c.Products)
-                .AsNoTracking()
-                .ToListAsync();
+        public async Task<IEnumerable<Cart>> GetAllAsync() => await _context.Carts.Include(c => c.Products).ToListAsync();
 
-        public async Task<Cart?> GetByIdAsync(int id) =>
-            await _context.Carts
-                .Include(c => c.Products)
-                .FirstOrDefaultAsync(c => c.Id == id);
+        public async Task<Cart?> GetByIdAsync(int id) => await _context.Carts.Include(c => c.Products).FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task UpdateAsync(Cart cart)
         {

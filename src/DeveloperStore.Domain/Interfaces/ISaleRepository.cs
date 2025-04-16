@@ -4,10 +4,10 @@ namespace DeveloperStore.Domain.Interfaces
 {
     public interface ISaleRepository
     {
-        Task<Sale> AddAsync(Sale sale);
-        Task<Sale?> GetByIdAsync(Guid id);
-        Task<List<Sale>> GetAllAsync();
+        Task<Sale?> GetByIdAsync(int id);
+        Task<IEnumerable<Sale>> GetAllAsync();
+        Task AddAsync(Sale sale);
         Task UpdateAsync(Sale sale);
-        Task CancelAsync(Guid id);
+        Task DeleteAsync(int id);
     }
 }

@@ -1,55 +1,41 @@
 ﻿using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Interfaces;
-using DeveloperStore.Infrastructure.Persistence;
+using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories
 {
     public class SaleRepository : ISaleRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
+        public SaleRepository(AppDbContext context) => _context = context;
 
-        public SaleRepository(ApplicationDbContext context)
+        public async Task AddAsync(Sale sale)
         {
-            _context = context;
-        }
-
-        public async Task<Sale> AddAsync(Sale sale)
-        {
-            _context.Sales.Add(sale);
+            await _context.Sales.AddAsync(sale);
             await _context.SaveChangesAsync();
-            return sale;
         }
 
-        public async Task<List<Sale>> GetAllAsync()
+        public async Task DeleteAsync(int id)
         {
-            return await _context.Sales
-                .Include(s => s.Items)
-                .AsNoTracking()
-                .ToListAsync();
+            var sale = await GetByIdAsync(id);
+            if (sale != null)
+            {
+                _context.Sales.Remove(sale);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task<Sale?> GetByIdAsync(Guid id)
-        {
-            return await _context.Sales
-                .Include(s => s.Items)
-                .FirstOrDefaultAsync(s => s.Id == id);
-        }
+        public async Task<IEnumerable<Sale>> GetAllAsync() =>
+            await _context.Sales.Include(s => s.Items).ToListAsync();
+
+        public async Task<Sale?> GetByIdAsync(int id) =>
+            await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id);
 
         public async Task UpdateAsync(Sale sale)
         {
             _context.Sales.Update(sale);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task CancelAsync(Guid id)
-        {
-            var sale = await _context.Sales.FindAsync(id);
-            if (sale is not null)
-            {
-                sale.Cancel();
-                await _context.SaveChangesAsync();
-            }
         }
     }
 }
