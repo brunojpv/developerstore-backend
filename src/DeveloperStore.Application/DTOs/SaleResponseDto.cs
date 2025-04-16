@@ -9,5 +9,7 @@
         public string Branch { get; set; } = string.Empty;
         public bool Cancelled { get; set; }
         public List<SaleItemResponseDto> Items { get; set; } = new();
+
+        public decimal TotalAmount => Items.Sum(i => i.Total);
     }
 }

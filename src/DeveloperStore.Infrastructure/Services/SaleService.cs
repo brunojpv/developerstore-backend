@@ -4,7 +4,7 @@ using DeveloperStore.Domain.Entities;
 using DeveloperStore.Infrastructure.Data;
 using Microsoft.Extensions.Logging;
 
-namespace DeveloperStore.Application.Services
+namespace DeveloperStore.Infrastructure.Services
 {
     public class SaleService : ISaleService
     {

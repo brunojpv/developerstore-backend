@@ -6,7 +6,7 @@ using DeveloperStore.Domain.Entities;
 using DeveloperStore.Infrastructure.Data;
 using MediatR;
 
-namespace DeveloperStore.Application.Handlers
+namespace DeveloperStore.Infrastructure.Handlers
 {
     public class CreateSaleCommandHandler : IRequestHandler<CreateSaleCommand, SaleResponseDto>
     {

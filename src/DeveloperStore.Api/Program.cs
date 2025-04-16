@@ -2,13 +2,13 @@ using DeveloperStore.Api.Controllers;
 using DeveloperStore.Application.Events;
 using DeveloperStore.Application.Interfaces;
 using DeveloperStore.Application.Mappings;
-using DeveloperStore.Application.Services;
 using DeveloperStore.Application.UseCases.Sales;
 using DeveloperStore.Domain.Interfaces;
 using DeveloperStore.Infrastructure.Data;
 using DeveloperStore.Infrastructure.Events;
 using DeveloperStore.Infrastructure.Repositories;
 using DeveloperStore.Infrastructure.Seeders;
+using DeveloperStore.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -20,6 +20,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                       "Host=localhost;Port=5432;Database=DeveloperStoreDb;Username=devstore;Password=devstore123"));
 
 builder.Services.AddMediatR(typeof(CreateSaleHandler).Assembly);
+builder.Services.AddMediatR(typeof(UpdateSaleCommand).Assembly);
+builder.Services.AddMediatR(typeof(CancelSaleCommand).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
